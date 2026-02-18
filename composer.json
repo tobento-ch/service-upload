@@ -1,0 +1,65 @@
+{
+    "name": "tobento/service-upload",
+    "version": "2.0",
+    "type": "library",
+    "description": "Upload service for PHP applications.",
+    "keywords": [
+        "tobento",
+        "package",
+        "php",
+        "upload",
+        "validator",
+        "file",
+        "image",
+        "sanitizer"
+    ],
+    "homepage": "https://www.tobento.ch",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tobias Strub",
+            "email": "info@tobento.ch",
+            "homepage": "https://www.tobento.ch"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.4",
+        "psr/http-client": "^1.0",
+        "psr/http-message": "^2.0",
+        "psr/log": "^3.0",
+        "league/mime-type-detection": "^1.16"
+    },
+    "suggest": {
+        "enshrined/svg-sanitize": "Required for SVG sanitizer writer",
+        "tobento/service-file-storage": "Required for file writer and UploadedFileFactory->createFromStorageFile()",
+        "tobento/service-message": "Required for FileWriter and WriteResponse messages"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12.3",
+        "vimeo/psalm": "^6.13",
+        "enshrined/svg-sanitize": "^0.22.0",
+        "monolog/monolog": "^3.9",
+        "nyholm/psr7": "^1.8",
+        "symfony/http-client": "^8.0",
+        "tobento/service-filesystem": "^2.0",
+        "tobento/service-file-storage": "^2.0",
+        "tobento/service-imager": "^2.0",
+        "tobento/service-message": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tobento\\Service\\Upload\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tobento\\Service\\Upload\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit --testdox --colors=always",
+        "psalm": "vendor/bin/psalm"
+    }
+}
