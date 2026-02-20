@@ -64,7 +64,7 @@ class ImageProcessor implements ImageProcessorInterface
         protected array $quality = [],
         protected array $supportedMimeTypes = ['image/png', 'image/jpeg', 'image/gif'],
         null|ActionFactoryInterface $actionFactory = null,
-        protected null|LoggerInterface $logger = null,
+        private null|LoggerInterface $logger = null,
     ) {
         $this->actionFactory = $actionFactory ?: new ActionFactory();
     }

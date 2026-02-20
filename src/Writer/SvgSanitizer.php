@@ -41,7 +41,7 @@ class SvgSanitizer implements WriterInterface
     public function __construct(
         null|Sanitizer $sanitizer = null,
         protected bool $logIssues = true,
-        protected null|LoggerInterface $logger = null,
+        private null|LoggerInterface $logger = null,
     ) {
         if (is_null($sanitizer)) {
             $sanitizer = new Sanitizer();
