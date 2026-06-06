@@ -124,5 +124,100 @@ class UploadedFileFactoryTest extends TestCase
         );
         
         $storage->delete(path: 'file.txt');
-    } 
+    }
+    
+    public function testCreateFromString()
+    {
+        $factory = new UploadedFileFactory(
+            uploadedFileFactory: new Psr17Factory(),
+            streamFactory: new Psr17Factory(),
+            client: new Psr18Client(),
+            requestFactory: new Psr17Factory(),
+        );
+
+        $uploadedFile = $factory->createFromString(
+            content: 'hello world',
+            clientFilename: 'imported.bin',
+            clientMediaType: 'application/octet-stream',
+        );
+
+        $this->assertInstanceof(UploadedFileInterface::class, $uploadedFile);
+        $this->assertInstanceof(StreamInterface::class, $uploadedFile->getStream());
+        $this->assertSame(11, $uploadedFile->getSize());
+        $this->assertSame('imported.bin', $uploadedFile->getClientFilename());
+        $this->assertSame('application/octet-stream', $uploadedFile->getClientMediaType());
+    }
+
+    public function testCreateFromDataUriBase64()
+    {
+        $factory = new UploadedFileFactory(
+            uploadedFileFactory: new Psr17Factory(),
+            streamFactory: new Psr17Factory(),
+            client: new Psr18Client(),
+            requestFactory: new Psr17Factory(),
+        );
+
+        $dataUri = 'data:text/plain;base64,' . base64_encode('hello');
+
+        $uploadedFile = $factory->createFromDataUri($dataUri);
+
+        $this->assertInstanceof(UploadedFileInterface::class, $uploadedFile);
+        $this->assertInstanceof(StreamInterface::class, $uploadedFile->getStream());
+        $this->assertSame(5, $uploadedFile->getSize());
+        $this->assertSame('imported.bin', $uploadedFile->getClientFilename());
+        $this->assertSame('text/plain', $uploadedFile->getClientMediaType());
+        $this->assertSame('hello', (string)$uploadedFile->getStream());
+    }
+
+    public function testCreateFromDataUriUrlEncoded()
+    {
+        $factory = new UploadedFileFactory(
+            uploadedFileFactory: new Psr17Factory(),
+            streamFactory: new Psr17Factory(),
+            client: new Psr18Client(),
+            requestFactory: new Psr17Factory(),
+        );
+
+        $dataUri = 'data:text/plain,Hello%20World';
+
+        $uploadedFile = $factory->createFromDataUri($dataUri);
+
+        $this->assertInstanceof(UploadedFileInterface::class, $uploadedFile);
+        $this->assertInstanceof(StreamInterface::class, $uploadedFile->getStream());
+        $this->assertSame(11, $uploadedFile->getSize());
+        $this->assertSame('imported.bin', $uploadedFile->getClientFilename());
+        $this->assertSame('text/plain', $uploadedFile->getClientMediaType());
+        $this->assertSame('Hello World', (string)$uploadedFile->getStream());
+    }
+
+    public function testCreateFromDataUriThrowsExceptionOnInvalidUri()
+    {
+        $this->expectException(CreateUploadedFileException::class);
+        $this->expectExceptionMessage('Invalid data URI');
+
+        $factory = new UploadedFileFactory(
+            uploadedFileFactory: new Psr17Factory(),
+            streamFactory: new Psr17Factory(),
+            client: new Psr18Client(),
+            requestFactory: new Psr17Factory(),
+        );
+
+        $factory->createFromDataUri('not-a-data-uri');
+    }
+
+    public function testCreateFromDataUriThrowsExceptionOnMalformedUri()
+    {
+        $this->expectException(CreateUploadedFileException::class);
+        $this->expectExceptionMessage('Malformed data URI');
+
+        $factory = new UploadedFileFactory(
+            uploadedFileFactory: new Psr17Factory(),
+            streamFactory: new Psr17Factory(),
+            client: new Psr18Client(),
+            requestFactory: new Psr17Factory(),
+        );
+
+        // missing comma separator
+        $factory->createFromDataUri('data:text/plain;base64');
+    }
 }
