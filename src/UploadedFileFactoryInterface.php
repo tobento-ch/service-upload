@@ -39,4 +39,28 @@ interface UploadedFileFactoryInterface
      * @throws CreateUploadedFileException
      */
     public function createFromStorageFile(FileInterface $file): UploadedFileInterface;
+    
+   /**
+     * Create uploaded file from the given string.
+     *
+     * @param string $content
+     * @param string $clientFilename
+     * @param string $clientMediaType
+     * @return UploadedFileInterface
+     * @throws CreateUploadedFileException
+     */
+    public function createFromString(
+        string $content,
+        string $clientFilename,
+        string $clientMediaType = 'application/octet-stream'
+    ): UploadedFileInterface;
+    
+    /**
+     * Create uploaded file from the given data uri.
+     *
+     * @param string $uri
+     * @return UploadedFileInterface
+     * @throws CreateUploadedFileException
+     */
+    public function createFromDataUri(string $uri): UploadedFileInterface;
 }
