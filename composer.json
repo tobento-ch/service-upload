@@ -1,6 +1,6 @@
 {
     "name": "tobento/service-upload",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "type": "library",
     "description": "Upload service for PHP applications.",
     "keywords": [
