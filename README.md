@@ -473,6 +473,64 @@ try {
 
 If the storage file does not provide a stream, a `CreateUploadedFileException` is thrown.
 
+**createFromString**
+
+Creates an uploaded file from a raw string.  
+Useful when you already have the file contents in memory (for example, generated files or decoded binary data).
+
+```php
+use Psr\Http\Message\UploadedFileInterface;
+use Tobento\Service\Upload\Exception\CreateUploadedFileException;
+
+try {
+    $uploadedFile = $factory->createFromString(
+        content: 'file content', // string (binary-safe)
+        clientFilename: 'imported.bin', // string
+        clientMediaType: 'application/octet-stream', // string
+    );
+    
+    var_dump($uploadedFile instanceof UploadedFileInterface);
+    // bool(true)
+} catch (CreateUploadedFileException $e) {
+    // creating uploaded file failed.
+}
+```
+
+If creating the stream or uploaded file fails, a `CreateUploadedFileException` is thrown.
+
+**createFromDataUri**
+
+Creates an uploaded file from a Data URI such as:
+
+`data:text/plain;base64,SGVsbG8=`  
+or  
+`data:text/plain,Hello%20World`
+
+Supports both:
+
+- Base64-encoded data URIs  
+- URL-encoded (non-base64) data URIs  
+
+The MIME type is extracted from the data URI, and the filename defaults to `imported.bin`.
+
+```php
+use Psr\Http\Message\UploadedFileInterface;
+use Tobento\Service\Upload\Exception\CreateUploadedFileException;
+
+try {
+    $uploadedFile = $factory->createFromDataUri(
+        uri: 'data:text/plain;base64,SGVsbG8=' // string
+    );
+    
+    var_dump($uploadedFile instanceof UploadedFileInterface);
+    // bool(true)
+} catch (CreateUploadedFileException $e) {
+    // creating uploaded file failed.
+}
+```
+
+If the data URI is invalid, malformed, or cannot be decoded, a `CreateUploadedFileException` is thrown.
+
 ## File Storage Writer
 
 The file storage writer writes the given file to the defined [File Storage](https://github.com/tobento-ch/service-file-storage).  
